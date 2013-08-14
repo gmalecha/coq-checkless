@@ -10,13 +10,21 @@ This plugin has beem compiled succesfully with Coq 8.4-pl2
 Installation
 =================
 
+```shell
 make
 make install
+```
 
 Usage
 =================
 
-The plugin exposes a single new tactic [exact_no_check].
+To use the plugin (after installation), you can do the following.
+
+```coq
+Require Import Checkless.
+```
+
+The plugin exposes a single new tactic.
 
 - [exact_no_check t] is identical to [exact t] except
   there is no checking done of the term. This means that
