@@ -19,8 +19,28 @@ Fixpoint rfact (n : nat) : nat :=
     | S n => rfact n * 2
   end.
 
-Eval lazy in fact 12.
+Goal 1 = 2.
+  exact_no_check (@eq_refl nat 1).
+Abort.
 
-Goal fact 12 = rfact 12.
-  Time exact_no_check (@eq_refl nat 4096).
-Time Qed.
+(** A note on unification variables **)
+Goal exists x : nat, fst (1,x) = 1.
+eexists.
+(** vm_casts will fail if unification variables are
+ ** *syntactically* apparent in the term. e.g.
+ ** match goal with
+ **   | |- ?G =>
+ **     exact_no_check (@eq_refl nat 1 <: G)
+ ** end.
+ **)
+(* but they will succeed if the unification variables
+ * are hidden by [let] declarations
+ *)
+match goal with
+  | |- context [ (_, ?X) ] =>
+    remember X
+end.
+exact_no_check (@eq_refl nat 1 <: fst (1, n) = 1).
+Grab Existential Variables.
+exact 1.
+Qed.
