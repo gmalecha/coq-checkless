@@ -28,10 +28,12 @@ Goal exists x : nat, fst (1,x) = 1.
 eexists.
 (** vm_casts will fail if unification variables are
  ** *syntactically* apparent in the term. e.g.
- ** match goal with
- **   | |- ?G =>
- **     exact_no_check (@eq_refl nat 1 <: G)
- ** end.
+ **
+ ** let V := match goal with
+ **           | |- ?X => X
+ **         end
+ ** in
+ ** exact_no_check (@eq_refl nat 1 <: V).
  **)
 (* but they will succeed if the unification variables
  * are hidden by [let] declarations
@@ -45,6 +47,20 @@ Grab Existential Variables.
 exact 1.
 Qed.
 
+Definition ident (T : Type) (t : T) : T := t.
+
+(** to get around this, we have an unsafe way to build a vm_cast.
+ ** the parsing rules of coq allow us to inject this into terms.
+ **)
+Goal exists x : nat, fst (1,x) = 1.
+eexists.
+match goal with
+  | |- ?X =>
+    unchecked_vm_cast (@eq_refl nat 1) X (fun Z => exact_no_check (ident (1=1) Z))
+end.
+Grab Existential Variables.
+exact 1.
+Qed.
 
 Goal True.
 idtac;

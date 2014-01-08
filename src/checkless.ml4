@@ -44,3 +44,11 @@ TACTIC EXTEND unchecked_change
 	ltac_apply cont [to_ltac_val ntrm] gl
     ]
 END;;
+
+TACTIC EXTEND unchecked_vm_cast
+  | [ "unchecked_vm_cast" constr(l) constr(r) tactic(cont) ] ->
+    [ fun gl ->
+      let result = Term.mkCast (l, Term.VMcast, r) in
+      ltac_apply cont [to_ltac_val result] gl
+    ]
+END;;
