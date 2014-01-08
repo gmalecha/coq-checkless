@@ -44,3 +44,11 @@ exact_no_check (@eq_refl nat 1 <: fst (1, n) = 1).
 Grab Existential Variables.
 exact 1.
 Qed.
+
+
+Goal True.
+idtac;
+let F x := pose x in
+unchecked_change (1+1) 3 (1+1 = 3) F.
+trivial.
+Qed.
